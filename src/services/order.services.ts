@@ -1,19 +1,16 @@
+import orderModel from '../database/models/order.model';
+import productModel from '../database/models/product.model';
 import { Order } from '../types/Order';
-import OrderModel from '../database/models/order.model';
-import ProductModel from '../database/models/product.model';
 
 const listProducts = async (): Promise<Order[]> => {
-  const orders = await OrderModel.findAll();
-    
-  const products = await ProductModel.findAll();
+  const get = await orderModel.findAll({
+    include: { model: productModel, as: 'productIds', attributes: ['id'] },
+  });
 
-  return orders.map((order) => ({ ...order.dataValues,
-    productIds: products
-      .filter((product) => product.dataValues.orderId === order.dataValues.id)
-      .map((productId) => productId.dataValues.id),
-  }));
+  const getAll = get.map(({ dataValues: { id, userId, productIds } }) => 
+    ({ id, userId, productIds: productIds?.map(({ id: prodId }) => prodId) })) as Order[];
+
+  return getAll;
 };
 
-export default {
-  listProducts,
-};
+export default { listProducts };
