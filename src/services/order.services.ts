@@ -43,4 +43,3 @@ const listProducts = {
 };
 
 export default listProducts;
-
