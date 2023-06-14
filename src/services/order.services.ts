@@ -32,7 +32,7 @@ const listProducts = {
 
     if (productIds) {
       await Promise.all(
-        productIds.map(async (prodId) => ProductModel.update({ orderId: id }, {
+        productIds.map((prodId) => ProductModel.update({ orderId: id }, {
           where: { id: prodId },
         })),
       );
